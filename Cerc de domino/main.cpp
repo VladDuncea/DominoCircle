@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 using namespace std;
-
+// 1|6 6|3 3|4 4|6 
 void swapint(int &i, int &j)
 {
 	int aux=i;
@@ -9,14 +9,24 @@ void swapint(int &i, int &j)
 	j = aux;
 }
 
+typedef struct 
+{
+	int n1, n2;
+	int used;
+
+	
+}piesadomino;
+
+ostream& operator<<(ostream& os, piesadomino &pd)
+{
+	os << pd.n1 << '|' << pd.n2 << endl;
+	return os;
+}
+
 class Domino
 {
 private:
-	struct piesadomino
-	{
-		int n1, n2;
-		int used;
-	};
+	
 	int nr_piese = 28;
 
 	piesadomino vpiese[28];
@@ -37,12 +47,13 @@ public:
 	{
 		for (int i = 0; i < nr_piese; i++)
 		{
-			cout << vpiese[i].n1<<" | "<<vpiese[i].n2<<endl;
+			cout << vpiese[i];
 		}
 	}
 
-	void citire(ifstream &input)
+	void citire(const char path[])
 	{
+		ifstream input(path);
 		for (int i = 0; i < nr_piese; i++)
 		{
 			input >> vpiese[i].n1;
@@ -57,19 +68,46 @@ public:
 		qsort(vpiese,nr_piese,sizeof(piesadomino), compDomino);
 	}
 
+	piesadomino &operator[] (int i)
+	{
+		return vpiese[i];
+	}
+
+	int size()
+	{
+		return nr_piese;
+	}
 };
 
 
+int cerc_domino(Domino domino)
+{
+	int* vfrec = new int[domino.size()]();
+	for (int i=0; i < domino.size(); i++)
+	{
+		vfrec[domino[i].n1]++;
+		vfrec[domino[i].n2]++;
+	}
+	for (int i=0; i < domino.size(); i++)
+	{
+		if (vfrec[i] % 2 != 0)
+			return 0;
+	}
 
+
+	return 1;
+}
 
 
 int main()
 {
-	ifstream input ("piese.txt");
 	Domino domino; 
-	domino.citire(input);
+	domino.citire("piese.txt");
 	domino.sort();
-	domino.afisare();
+	//domino.afisare();
+
+	cout << cerc_domino(domino);
 	
+
 	return 0;
 }
