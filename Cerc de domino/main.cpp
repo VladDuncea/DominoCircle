@@ -7,7 +7,6 @@ void swapint(int &i, int &j)
 	int aux=i;
 	i = j;
 	j = aux;
-	//mergi fa
 }
 
 class Domino
